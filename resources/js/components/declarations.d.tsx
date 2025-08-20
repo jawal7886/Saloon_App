@@ -1,0 +1,12 @@
+declare module '*.jpg';
+declare module '*.JPG';
+declare module '*.png';
+declare module '*.webp';
+declare module './assets/5.jpg';
+declare module './assets/6.jpg';
+declare module './assets/7.jpg';
+declare module './assets/8.jpg';
+declare module './assets/9.jpg';
+declare module './assets/10.jpg';
+declare module './assets/11.jpg';
+declare module './assets/12.jpg'; 

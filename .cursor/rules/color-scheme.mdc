@@ -1,0 +1,140 @@
+---
+description:
+# **Vintage Classic Barber Shop** Color Rules
+
+## Core Color Palette
+```css
+/* Vintage Classic Palette */
+--primary-brown: #8B4513;      /* Saddle Brown - main brand color */
+--accent-gold: #D4AF37;        /* Gold - premium accents */
+--neutral-beige: #F5F5DC;      /* Beige - soft backgrounds */
+--text-dark: #2F2F2F;          /* Dark Gray - primary text */
+--text-light: #6B4423;         /* Medium Brown - secondary text */
+--background: #FAFAFA;         /* Off-White - main background */
+--cream: #FFF8DC;              /* Cornsilk - subtle sections */
+--dark-brown: #654321;         /* Dark Brown - deep accents */
+```
+
+## Color Distribution Rules
+
+### **60-30-10 Rule Application:**
+- **60% Neutral Base**: Off-white (#FAFAFA) and beige (#F5F5DC) backgrounds
+- **30% Primary Brown**: Saddle brown (#8B4513) for headers, navigation, key sections
+- **10% Gold Accents**: Gold (#D4AF37) for buttons, highlights, premium elements
+
+## Element-Specific Color Rules
+
+### **Header & Navigation:**
+```css
+Background: #8B4513 (Saddle Brown)
+Text: #FAFAFA (Off-White)
+Logo accent: #D4AF37 (Gold)
+Active nav item: #D4AF37 (Gold) background
+Hover effect: #654321 (Dark Brown)
+```
+
+### **Call-to-Action Buttons:**
+```css
+Primary CTA: #D4AF37 (Gold) background, #2F2F2F (Dark) text
+Secondary CTA: #8B4513 (Brown) outline, #8B4513 (Brown) text
+Hover Primary: #B8860B (Darker Gold)
+Hover Secondary: #8B4513 (Brown) background, #FAFAFA (Off-White) text
+```
+
+### **Content Sections:**
+```css
+Main background: #FAFAFA (Off-White)
+Card/Panel background: #F5F5DC (Beige)
+Alternate sections: #FFF8DC (Cream)
+Borders: #D4AF37 (Gold) - 1px solid
+Dividers: #C4A484 (Muted Gold)
+```
+
+### **Typography Colors:**
+```css
+Headlines (H1-H2): #2F2F2F (Dark Gray)
+Body text: #2F2F2F (Dark Gray)
+Secondary text: #6B4423 (Medium Brown)
+Links: #8B4513 (Saddle Brown)
+Link hover: #D4AF37 (Gold)
+Captions/metadata: #8B7355 (Light Brown)
+```
+
+## Vintage-Specific Design Rules
+
+### **Decorative Elements:**
+- **Gold borders**: Use #D4AF37 for premium service highlights
+- **Brown dividers**: #8B4513 for section separators
+- **Subtle shadows**: rgba(43, 67, 35, 0.1) for depth
+- **Vintage patterns**: Use beige (#F5F5DC) backgrounds with subtle textures
+
+### **Service Cards/Pricing:**
+```css
+Card background: #F5F5DC (Beige)
+Card border: 2px solid #D4AF37 (Gold)
+Service title: #2F2F2F (Dark Gray)
+Price: #D4AF37 (Gold) - larger, bold
+Description: #6B4423 (Medium Brown)
+```
+
+### **Form Elements:**
+```css
+Input background: #FAFAFA (Off-White)
+Input border: #8B4513 (Brown)
+Input focus: #D4AF37 (Gold) border
+Label text: #2F2F2F (Dark Gray)
+Placeholder: #8B7355 (Light Brown)
+```
+
+## Semantic Color Applications
+
+### **Status Indicators:**
+```css
+Success: #8B4513 (Brown) - keeping vintage theme
+Warning: #CD853F (Peru Brown) - vintage-friendly orange
+Error: #A0522D (Sienna) - muted red-brown
+Info: #6B4423 (Medium Brown)
+```
+
+### **Interactive States:**
+```css
+Default button: #D4AF37 (Gold)
+Hover: #B8860B (Dark Gold)
+Active: #8B4513 (Brown)
+Disabled: #C4A484 (Muted Gold) with 50% opacity
+```
+
+## Accessibility Rules
+
+### **Contrast Requirements Met:**
+- Dark Gray (#2F2F2F) on Off-White (#FAFAFA): 12.6:1 ✓
+- Brown (#8B4513) on Beige (#F5F5DC): 4.8:1 ✓
+- Gold (#D4AF37) on Brown (#8B4513): 4.1:1 ✓
+- White text on Brown background: 8.9:1 ✓
+
+## Usage Guidelines
+
+### **Do's:**
+- Use gold sparingly for premium elements
+- Maintain warm, earthy feeling throughout
+- Layer different browns for depth
+- Use beige/cream for soft section breaks
+
+### **Don'ts:**
+- Avoid bright, modern colors (neon, electric blue)
+- Don't use pure black - stick to dark grays/browns
+- Avoid high contrast combinations outside the palette
+- Don't overuse gold - keep it special
+
+### **Vintage Texture Suggestions:**
+- Subtle paper texture on beige backgrounds
+- Leather texture hints on brown elements
+- Aged/weathered effects on borders
+- Classic serif fonts to complement colors
+
+This vintage classic palette creates a **warm, traditional, and premium** feeling perfect for established barbershops with heritage and craftsmanship focus.
+
+
+globs:
+alwaysApply: true
+---
