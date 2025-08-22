@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const iconClass = "w-4 h-4 inline-block align-text-bottom mr-1 text-[#D4AF37]";
 
@@ -17,26 +17,45 @@ const Header = ({ salon, onLoginClick, onSignupClick, onBookingClick, onAdminCli
     const [mobileNavOpen, setMobileNavOpen] = useState(false);
     const [active, setActive] = useState<string>('home');
     const [logoError, setLogoError] = useState(false);
+    const [fetchedSalon, setFetchedSalon] = useState<{ name?: string; logo?: string; phone1?: string } | null>(null);
+    const salonData = salon || fetchedSalon || undefined;
     
-    React.useEffect(() => {
+    useEffect(() => {
         document.documentElement.style.scrollBehavior = 'smooth';
         return () => {
             document.documentElement.style.scrollBehavior = '';
         };
     }, []);
 
+    useEffect(() => {
+        if (salon) return;
+        const load = async () => {
+            try {
+                const res = await fetch('/api/salons', { headers: { 'Accept': 'application/json' } as HeadersInit });
+                if (!res.ok) return;
+                const data = await res.json();
+                if (Array.isArray(data) && data.length > 0) {
+                    setFetchedSalon({ name: data[0].name, logo: data[0].logo, phone1: data[0].phone1 });
+                }
+            } catch (_) {
+                // ignore
+            }
+        };
+        load();
+    }, [salon]);
+
     const handleLogoError = () => {
         setLogoError(true);
     };
 
     return (
-        <header className="bg-[#8B4513] shadow-lg rounded-b-xl sticky top-0 z-50 border-b border-[#D4AF37]">
-            <div className="max-w-7xl mx-auto flex flex-nowrap items-center justify-between py-2 px-4 sm:px-8 lg:px-12">
+        <header className="bg-[#8B4513] shadow-lg rounded-b-xl sticky top-0 z-50 border-b border-[#D4AF37] w-full overflow-x-hidden">
+            <div className="max-w-[100vw] w-full mx-auto flex flex-wrap items-center justify-between py-2 px-4 sm:px-8 lg:px-12 overflow-x-hidden">
                 {/* Logo/Name */}
                 <a href="/" className="text-2xl font-extrabold tracking-tight flex items-center gap-2 text-[#FAFAFA] hover:text-[#D4AF37] transition-colors duration-150 whitespace-nowrap">
-                    {salon?.logo && !logoError && (
+                    {salonData?.logo && !logoError && (
                         <img 
-                            src={salon.logo} 
+                            src={salonData.logo} 
                             alt="Salon Logo" 
                             width={40}
                             height={40}
@@ -44,7 +63,7 @@ const Header = ({ salon, onLoginClick, onSignupClick, onBookingClick, onAdminCli
                             onError={handleLogoError}
                         />
                     )}
-                    <span className="mr-1">{salon?.name || 'Barbershop'}</span>
+                    <span className="mr-1">{salonData?.name || 'Barbershop'}</span>
                     <span className="text-[#D4AF37] text-3xl leading-none">•</span>
                 </a>
                 {/* Desktop Navigation */}
@@ -81,9 +100,9 @@ const Header = ({ salon, onLoginClick, onSignupClick, onBookingClick, onAdminCli
                 {/* Actions & Quick Info (hidden on mobile) */}
                 <div className="hidden md:flex items-center gap-3 whitespace-nowrap">
                     {/* Phone */}
-                    <a href="tel:+1234567890" className="items-center text-sm text-[#F5F5DC] hover:text-[#D4AF37] transition-colors px-2 whitespace-nowrap">
+                    <a href={`tel:${salonData?.phone1 || '+1234567890'}`} className="items-center text-sm text-[#F5F5DC] hover:text-[#D4AF37] transition-colors px-2 whitespace-nowrap">
                         <svg className={iconClass} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h2.28a2 2 0 011.94 1.515l.3 1.2a2 2 0 01-.45 1.95l-.7.7a16.001 16.001 0 006.36 6.36l.7-.7a2 2 0 011.95-.45l1.2.3A2 2 0 0121 16.72V19a2 2 0 01-2 2h-1C9.163 21 3 14.837 3 7V5z" /></svg>
-                        (123) 456-7890
+                        {salonData?.phone1 ? salonData.phone1 : '(123) 456-7890'}
                     </a>
                     {/* Login/Signup - fix alignment */}
                     <div className="flex flex-row items-center gap-x-2 whitespace-nowrap">

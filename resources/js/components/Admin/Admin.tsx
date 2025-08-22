@@ -758,6 +758,23 @@ const Admin = ({ onBack }: AdminProps) => {
                                 handleInputChange={handleInputChange}
                                 handleSubmit={handleSubmit}
                                 getCsrfToken={getCsrfToken}
+                                onCreated={(salon: any) => {
+                                    setSalonId(salon.id);
+                                    setSalonDetails(prev => ({
+                                        ...prev,
+                                        name: salon.name || '',
+                                        tagLine: salon.tag_line || '',
+                                        logo: salon.logo || '',
+                                        address: salon.address || '',
+                                        phone1: salon.phone1 || '',
+                                        phone2: salon.phone2 || '',
+                                        email1: salon.email1 || '',
+                                        email2: salon.email2 || ''
+                                    }));
+                                    setMessage('Salon created successfully!');
+                                    setMessageType('success');
+                                    setTimeout(() => setMessage(''), 3000);
+                                }}
                             />
                             <div className="flex justify-end mt-6">
                                 <button

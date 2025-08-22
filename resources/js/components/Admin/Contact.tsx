@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface ContactProps {
     contactInfo: any;
@@ -19,16 +19,90 @@ const Contact: React.FC<ContactProps> = ({
     updateMessageStatus,
     deleteMessage
 }) => {
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [creating, setCreating] = useState(false);
+    const [formState, setFormState] = useState<any>({
+        business_name: contactInfo.business_name || '',
+        phone: contactInfo.phone || '',
+        email: contactInfo.email || '',
+        website: contactInfo.website || '',
+        address: contactInfo.address || '',
+        business_hours: contactInfo.business_hours || {
+            monday: '', tuesday: '', wednesday: '', thursday: '', friday: '', saturday: '', sunday: ''
+        },
+        additional_info: contactInfo.additional_info || ''
+    });
+
+    const updateLocal = (field: string, value: any) => {
+        if (field.startsWith('business_hours.')) {
+            const key = field.split('.')[1];
+            setFormState((prev: any) => ({
+                ...prev,
+                business_hours: { ...prev.business_hours, [key]: value }
+            }));
+            return;
+        }
+        setFormState((prev: any) => ({ ...prev, [field]: value }));
+    };
+
+    const applyToParent = async () => {
+        setCreating(true);
+        try {
+            handleContactInputChange('business_name', formState.business_name);
+            handleContactInputChange('phone', formState.phone);
+            handleContactInputChange('email', formState.email);
+            handleContactInputChange('website', formState.website);
+            handleContactInputChange('address', formState.address);
+            Object.entries(formState.business_hours || {}).forEach(([day, hours]) => {
+                handleContactInputChange(`business_hours.${day}`, hours as string);
+            });
+            handleContactInputChange('additional_info', formState.additional_info);
+            setShowCreateModal(false);
+            // Save immediately by invoking the parent submit with a no-op event after state updates flush
+            setTimeout(() => {
+                try {
+                    handleContactInfoSubmit({ preventDefault: () => {} } as any);
+                } catch (_) {
+                    // fall back silently; user can still click Update
+                }
+            }, 0);
+        } finally {
+            setCreating(false);
+        }
+    };
+
     return (
         <div className="space-y-8">
             {/* Contact Information Management */}
             <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-gray-800 flex items-center">
                     <svg className="w-6 h-6 text-[#D4AF37] mr-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                     Contact Information
                 </h2>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setFormState({
+                                business_name: contactInfo.business_name || '',
+                                phone: contactInfo.phone || '',
+                                email: contactInfo.email || '',
+                                website: contactInfo.website || '',
+                                address: contactInfo.address || '',
+                                business_hours: contactInfo.business_hours || {
+                                    monday: '', tuesday: '', wednesday: '', thursday: '', friday: '', saturday: '', sunday: ''
+                                },
+                                additional_info: contactInfo.additional_info || ''
+                            });
+                            setShowCreateModal(true);
+                        }}
+                        className="bg-[#D4AF37] hover:bg-[#B8941F] text-white px-4 py-2 rounded-lg font-semibold transition-colors duration-200"
+                    >
+                        Add Contact
+                    </button>
+                </div>
                 
                 <form onSubmit={handleContactInfoSubmit} className="space-y-6" noValidate>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -139,6 +213,43 @@ const Contact: React.FC<ContactProps> = ({
                     </div>
                 </form>
             </div>
+
+            {showCreateModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-3xl mx-4 max-h-[90vh] overflow-y-auto">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-xl font-bold text-gray-800">Add Contact</h3>
+                            <button onClick={() => setShowCreateModal(false)} className="text-gray-500 hover:text-gray-700">✕</button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <input className="px-4 py-3 border rounded-lg" placeholder="Enter business name" value={formState.business_name} onChange={(e)=>updateLocal('business_name', e.target.value)} />
+                            <input className="px-4 py-3 border rounded-lg" placeholder="Enter phone number" value={formState.phone} onChange={(e)=>updateLocal('phone', e.target.value)} />
+                            <input className="px-4 py-3 border rounded-lg" placeholder="Enter email address" value={formState.email} onChange={(e)=>updateLocal('email', e.target.value)} />
+                            <input className="px-4 py-3 border rounded-lg" placeholder="Enter website URL" value={formState.website} onChange={(e)=>updateLocal('website', e.target.value)} />
+                            <textarea className="md:col-span-2 px-4 py-3 border rounded-lg" rows={3} placeholder="Enter full address" value={formState.address} onChange={(e)=>updateLocal('address', e.target.value)} />
+                        </div>
+                        <div className="mt-4">
+                            <h4 className="text-md font-semibold text-gray-800 mb-2">Business Hours</h4>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {Object.entries(formState.business_hours).map(([day, hours]: any) => (
+                                    <div key={day}>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">{day}</label>
+                                        <input className="w-full px-4 py-2 border rounded-lg" placeholder="e.g., 9:00 AM - 7:00 PM" value={hours} onChange={(e)=>updateLocal(`business_hours.${day}`, e.target.value)} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="mt-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Additional Information</label>
+                            <textarea className="w-full px-4 py-3 border rounded-lg" rows={3} placeholder="e.g., Walk ins Welcome" value={formState.additional_info} onChange={(e)=>updateLocal('additional_info', e.target.value)} />
+                        </div>
+                        <div className="flex justify-end gap-3 pt-4">
+                            <button type="button" onClick={() => setShowCreateModal(false)} className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">Cancel</button>
+                            <button type="button" disabled={creating} onClick={applyToParent} className="bg-[#D4AF37] hover:bg-[#B8941F] text-white px-6 py-2 rounded-lg font-semibold transition-colors duration-200 disabled:opacity-50">{creating ? 'Applying...' : 'Apply'}</button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Contact Messages Management */}
             <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">

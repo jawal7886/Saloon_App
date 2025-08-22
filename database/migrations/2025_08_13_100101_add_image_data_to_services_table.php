@@ -24,7 +24,7 @@ return new class extends Migration
     {
         Schema::table('services', function (Blueprint $table) {
             $table->dropColumn('image_data');
-        });
+        }); 
     }
 };
 
